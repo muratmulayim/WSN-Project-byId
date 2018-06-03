@@ -212,7 +212,7 @@ implementation {
 					
 					currentState = TERM;
 					
-					dbg("printColor","\n\n ************* Mote-(%d) - BLACK ********* \n\n", TOS_NODE_ID);
+					dbg("printColor","\n\n [ %s ] ************* Mote-(%d) - BLACK ********* \n\n", sim_time_string(), TOS_NODE_ID);
 				}
 			}else{
 				myColor = BLACK;	
@@ -220,7 +220,7 @@ implementation {
 				
 				currentState = TERM;
 					
-				dbg("printColor","\n\n ************* Mote-(%d) - BLACK ********* \n\n", TOS_NODE_ID);
+				dbg("printColor","\n\n [ %s ] ************* Mote-(%d) - BLACK ********* \n\n", sim_time_string(), TOS_NODE_ID);
 			}
 		}
 	}
@@ -399,7 +399,7 @@ implementation {
 						sendBroadcastMessage(GRAY);
 						currentState = TERM;
 						
-						dbg("printColor","\n\n ************* Mote-(%d) - GRAY ********* \n\n", TOS_NODE_ID);
+						dbg("printColor","\n\n [ %s ] ************* Mote-(%d) - GRAY ********* \n\n", sim_time_string(), TOS_NODE_ID);
 					}
 					
 					break;
