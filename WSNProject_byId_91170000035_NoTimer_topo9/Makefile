@@ -1,0 +1,3 @@
+COMPONENT=WSNProjectAppC
+include $(MAKERULES)
+
