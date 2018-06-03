@@ -19,6 +19,14 @@ module WSNProjectC {
 }
 
 implementation {
+
+
+
+	uint16_t msgRcvCount = 0;
+	uint16_t msgSntCount = 0;
+	
+	/**/
+	
 	am_addr_t neighborNodes[MAX_ARRAY_SIZE] = {};
 	am_addr_t whiteNodes[MAX_ARRAY_SIZE] = {};
 	am_addr_t grayNodes[MAX_ARRAY_SIZE] = {};
@@ -273,6 +281,9 @@ implementation {
 		return FALSE;
 	}
 
+	task void printSntMsgCount(){
+		dbg("printSntMsgCount", "[ %s ] -- printSntMsgCount(): total number of message sent is %d. \n", sim_time_string(), msgSntCount);
+	}
 	
 	/**************** Boot *********************/
 	event void Boot.booted() {	
@@ -337,6 +348,10 @@ implementation {
 
 		MDS_message* releasedMsg = (MDS_message*)(call Packet.getPayload(msg, sizeof(MDS_message)));
 		
+		msgSntCount++;
+		
+		post printSntMsgCount();
+		
 		switch(releasedMsg->_type){
 			case GRAY: 
 				dbg("sendDone", "[ %s ] -- AMSend.sendDone(): GRAY message from Mote-(%d) --> Mote-(ALL) was sent. \n", sim_time_string(), TOS_NODE_ID);
@@ -367,11 +382,13 @@ implementation {
 		if (len == sizeof(MDS_message)) {
 			
 			MDS_message* rcvpkt = (MDS_message*)payload;
-			dbg("receiveColor","[ %s ] *** Mote-(%d) - %s received from Mote-(%d). \n", sim_time_string(), TOS_NODE_ID, messageTypeToString(rcvpkt->_type), sourceNodeid);
+			
+			msgRcvCount++;
+			
+			dbg("receiveColor","[ %s ] *** Mote-(%d) - %s received from Mote-(%d); total number of message received is %d. \n", sim_time_string(), TOS_NODE_ID, messageTypeToString(rcvpkt->_type), sourceNodeid, msgRcvCount);
 			switch(rcvpkt->_type){
 				case BLACK:
 					
-					dbg("receiveColor","[ %s ] *** Mote-(%d) - BLACK received from Mote-(%d). \n", sim_time_string(), TOS_NODE_ID, sourceNodeid);
 					if(!isNodeBlack(sourceNodeid)){
 						deleteElement(whiteNodes, sourceNodeid);
 						addElement(blackNodes, sourceNodeid);
@@ -389,7 +406,6 @@ implementation {
 			
 				case GRAY:
 				
-					dbg("receiveColor","[ %s ] *** Mote-(%d) - GRAY received from Mote-(%d). \n", sim_time_string(),TOS_NODE_ID, sourceNodeid);
 					if(!isNodeGray(sourceNodeid)){
 						deleteElement(whiteNodes, sourceNodeid);
 						addElement(grayNodes, sourceNodeid);
